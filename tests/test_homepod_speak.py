@@ -183,3 +183,13 @@ def test_parse_quiet_when_forms():
                               {"entity": "sensor.g", "states": ["A", "B"]}, {"nope": 1}])
     assert [(r.entity, r.states) for r in rules] == [
         ("input_boolean.dnd", ("on",)), ("sensor.f", ("Sleep",)), ("sensor.g", ("A", "B"))]
+
+
+@pytest.mark.skipif(not __import__("shutil").which("ffmpeg"), reason="ffmpeg not installed")
+def test_ensure_playable_transcodes_ogg_to_mp3(tmp_path):
+    import subprocess
+    ogg = tmp_path / "voice.ogg"  # what Opus-preferring platforms (e.g. Telegram) get from text_to_speech
+    subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i",
+                    "sine=frequency=440:duration=0.3", "-c:a", "libopus", str(ogg)], check=True)
+    out = ensure_playable(ogg)
+    assert out.suffix == ".mp3" and out.stat().st_size > 0
