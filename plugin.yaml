@@ -1,0 +1,8 @@
+name: hermes-homepod-speak
+version: 0.1.0
+description: "Let your agent say things out loud on a HomePod (or any Home Assistant media player) in its own text_to_speech voice. One speak_aloud tool: checks that someone is home and the speaker is free, generates the line with Hermes' configured TTS, then plays it through Home Assistant."
+author: Yuan
+provides_tools:
+  - speak_aloud
+requires_env:
+  - HASS_TOKEN
